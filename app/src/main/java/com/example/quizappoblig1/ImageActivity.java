@@ -1,5 +1,6 @@
 package com.example.quizappoblig1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,7 +53,8 @@ public class ImageActivity extends AppCompatActivity {
 
     private void sendImageAndText() {
         ImageView imageView = findViewById(R.id.baseimage);
-        Intent intent = new Intent(this, GalleryActivity.class);
+        Intent intent = new Intent();
+
         if (imageUri != null) {
             intent.putExtra("imageUri", imageUri.toString());
         }
@@ -60,8 +62,8 @@ public class ImageActivity extends AppCompatActivity {
         if (inputText != null) {
             intent.putExtra("inputText", inputText.toString());
         }
+        setResult(Activity.RESULT_OK, intent);
         finish();
-        startActivity(intent);
     }
 
     private void  pickImage() {

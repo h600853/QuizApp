@@ -1,6 +1,7 @@
 package com.example.quizappoblig1;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private Context context;
-    private int[] images;
-    private String[] names;
+    private final Context context;
+    private final ArrayList<Uri> images;
+    private final ArrayList<String> names;
 
-    public ImageAdapter(Context context, int[] images, String[] names) {
+    public ImageAdapter(Context context, ArrayList<Uri> images, ArrayList<String> names) {
         this.context = context;
         this.images = images;
         this.names = names;
@@ -31,15 +35,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int imageResource = images[position];
-        String imageName = names[position];
-        holder.imageView.setImageResource(imageResource);
+        Uri imageResource = images.get(position);
+        String imageName = names.get(position);
+        holder.imageView.setImageURI(imageResource);
         holder.imageName.setText(imageName);
     }
 
     @Override
     public int getItemCount() {
-        return images.length;
+        return images.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
