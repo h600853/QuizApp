@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/baseimage"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:scaleType="centerInside"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/baseimage" />
 
     <Button
         android:id="@+id/choose"

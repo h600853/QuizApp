@@ -3,10 +3,8 @@ package com.example.quizappoblig1;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.text.Editable;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -29,7 +27,7 @@ public class ImageActivity extends AppCompatActivity {
 
         Button chooseButton = findViewById(R.id.choose);
         Button submitButton = findViewById(R.id.submit);
-        ImageView imageView = findViewById(R.id.imageView);
+        ImageView imageView = findViewById(R.id.baseimage);
         textInputEditText = findViewById(R.id.textInputEditText);
 
         pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -53,7 +51,7 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void sendImageAndText() {
-        ImageView imageView = findViewById(R.id.imageView);
+        ImageView imageView = findViewById(R.id.baseimage);
         Intent intent = new Intent(this, GalleryActivity.class);
         if (imageUri != null) {
             intent.putExtra("imageUri", imageUri.toString());
