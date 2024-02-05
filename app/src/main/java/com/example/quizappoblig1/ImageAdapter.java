@@ -17,13 +17,13 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<Uri> images;
-    private final ArrayList<String> names;
+    private final ArrayList<ImageAndText> images;
 
-    public ImageAdapter(Context context, ArrayList<Uri> images, ArrayList<String> names) {
+
+    public ImageAdapter(Context context, ArrayList<ImageAndText> images) {
         this.context = context;
         this.images = images;
-        this.names = names;
+
     }
 
     @NonNull
@@ -35,10 +35,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Uri imageResource = images.get(position);
-        String imageName = names.get(position);
-        holder.imageView.setImageURI(imageResource);
-        holder.imageName.setText(imageName);
+        ImageAndText imageResource = images.get(position);
+        holder.imageView.setImageURI(imageResource.getImage());
+        holder.imageName.setText(imageResource.getName());
     }
 
     @Override
