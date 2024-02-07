@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GalleryActivity extends AppCompatActivity {
    private ActivityResultLauncher<Intent> activityResultLauncher;
    private Content content;
     private final int flag = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+    private boolean sorted = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
         recyclerView.setAdapter(imageAdapter);
         Button add = findViewById(R.id.add);
         Button delete = findViewById(R.id.delete);
+        Button sort = findViewById(R.id.sort);
 
         add.setOnClickListener(v -> {
         Intent intent = new Intent(GalleryActivity.this, ImageActivity.class);
@@ -63,7 +67,24 @@ public class GalleryActivity extends AppCompatActivity {
             recyclerView.setAdapter(imageAdapter);
             }
         });
+        sort.setOnClickListener(v -> {
+            ArrayList<ImageAndText> imageList = content.getContent();
+            int i = 0;
 
+            if (!imageList.isEmpty()) {
+                //sort a to z
+                if(sorted) {
+                    imageList.sort(Comparator.comparing(ImageAndText::getName));
+                    sort.setText("Sort Z-A");
+                } else {
+                    imageList.sort(Comparator.comparing(ImageAndText::getName).reversed());
+                    sort.setText("Sort A-Z");
+                }
+                }
+                sorted = !sorted;
+                recyclerView.setAdapter(imageAdapter);
+
+            });
     }
 
     @Override
