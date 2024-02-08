@@ -39,6 +39,8 @@ public class QuizActivity extends AppCompatActivity {
 
     }
     public void getRandomQuestion() {
+        if (content.getContent().isEmpty()) return;
+
         int random = (int) (Math.random() * content.getContent().size());
         ImageAndText answer = content.getContent().get(random);
         imageView.setImageURI(answer.getImage());

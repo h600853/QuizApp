@@ -53,20 +53,13 @@ public class GalleryActivity extends AppCompatActivity {
         ImageAdapter imageAdapter = new ImageAdapter(this, content.getContent());
         recyclerView.setAdapter(imageAdapter);
         Button add = findViewById(R.id.add);
-        Button delete = findViewById(R.id.delete);
         Button sort = findViewById(R.id.sort);
 
         add.setOnClickListener(v -> {
         Intent intent = new Intent(GalleryActivity.this, ImageActivity.class);
         activityResultLauncher.launch(intent);
         });
-        delete.setOnClickListener(v -> {
-            ArrayList<ImageAndText> imageList = content.getContent();
-            if (!imageList.isEmpty()) {
-            imageList.remove(imageList.size()-1);
-            recyclerView.setAdapter(imageAdapter);
-            }
-        });
+
         sort.setOnClickListener(v -> {
             ArrayList<ImageAndText> imageList = content.getContent();
             int i = 0;

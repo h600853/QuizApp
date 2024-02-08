@@ -38,6 +38,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         ImageAndText imageResource = images.get(position);
         holder.imageView.setImageURI(imageResource.getImage());
         holder.imageName.setText(imageResource.getName());
+        if (holder.imageView != null) {
+            holder.imageView.setOnClickListener(v -> {
+                removeImage(position);
+            });
+        }
+    }
+
+    private void removeImage(int position) {
+        images.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, images.size());
     }
 
     @Override
