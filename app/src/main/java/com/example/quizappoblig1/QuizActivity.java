@@ -73,9 +73,13 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void setButtonClickListeners(ImageAndText answer, Button button) {
+        TextView answerText = findViewById(R.id.answer);
         button.setOnClickListener(v -> {
             if (button.getText().equals(answer.getName())) {
                 pointsCounter++;
+                answerText.setText("Correct!");
+            } else {
+                answerText.setText("Correct answer was: " + answer.getName());
             }
             newRound();
         });
