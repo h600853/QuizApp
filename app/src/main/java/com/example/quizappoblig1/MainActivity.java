@@ -14,10 +14,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button galleryButton = findViewById(R.id.gallery);
+        Button quizButton = findViewById(R.id.quiz);
+
         galleryButton.setOnClickListener(v -> {
             startActivity(new Intent(this, GalleryActivity.class));
         });
-        Button quizButton = findViewById(R.id.quiz);
         quizButton.setOnClickListener(v -> {
             startActivity(new Intent(this, QuizActivity.class));
         });

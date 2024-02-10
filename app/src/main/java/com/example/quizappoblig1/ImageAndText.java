@@ -4,8 +4,8 @@ import android.net.Uri;
 
 public class ImageAndText {
 
-    private String name;
-    private Uri image;
+    private final String name;
+    private final Uri image;
 
     public ImageAndText(String name, Uri image) {
         this.name = name;

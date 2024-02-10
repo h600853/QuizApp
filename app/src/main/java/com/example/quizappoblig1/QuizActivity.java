@@ -1,8 +1,5 @@
 package com.example.quizappoblig1;
 
-import static android.os.SystemClock.sleep;
-
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
     private Content content;
@@ -28,16 +23,21 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        init();
+        getRandomQuestion();
+
+
+    }
+
+    private void init() {
         imageView = findViewById(R.id.imageView);
         button = findViewById(R.id.option1);
         button2 = findViewById(R.id.option2);
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
         content = (Content) getApplication();
-        getRandomQuestion();
-
-
     }
+
     public void getRandomQuestion() {
         if (content.getContent().isEmpty()) return;
 

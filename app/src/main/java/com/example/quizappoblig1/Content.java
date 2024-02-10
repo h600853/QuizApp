@@ -3,8 +3,6 @@ package com.example.quizappoblig1;
 import android.app.Application;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 

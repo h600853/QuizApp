@@ -18,22 +18,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ImageActivity extends AppCompatActivity {
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
-    Uri imageUri;
-    TextInputEditText textInputEditText;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    private Uri imageUri;
+    private TextInputEditText textInputEditText;
+    private Button chooseButton;
+    private Button submitButton;
+    private ImageView imageView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        Button chooseButton = findViewById(R.id.choose);
-        Button submitButton = findViewById(R.id.submit);
-        ImageView imageView = findViewById(R.id.baseimage);
-        textInputEditText = findViewById(R.id.textInputEditText);
+        init();
 
+        setupActivityForResult();
+
+        setupOnClickListeners();
+
+    }
+    private void init() {
+        chooseButton = findViewById(R.id.choose);
+        submitButton = findViewById(R.id.submit);
+        imageView = findViewById(R.id.baseimage);
+        textInputEditText = findViewById(R.id.textInputEditText);
+    }
+
+    private void setupActivityForResult() {
         pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
+
             if (uri != null) {
                 imageView.setImageURI(uri);
                 imageUri = uri;
@@ -41,18 +53,14 @@ public class ImageActivity extends AppCompatActivity {
                 Log.d("PhotoPicker", "No media selected");
             }
         });
+    }
 
-        chooseButton.setOnClickListener(v -> {
-            pickImage();
-        });
-        submitButton.setOnClickListener(v -> {
-            sendImageAndText();
-        });
-
+    private void setupOnClickListeners() {
+        chooseButton.setOnClickListener(v -> pickImage());
+        submitButton.setOnClickListener(v -> sendImageAndText());
     }
 
     private void sendImageAndText() {
-        ImageView imageView = findViewById(R.id.baseimage);
         Intent intent = new Intent();
 
         if (imageUri != null) {
