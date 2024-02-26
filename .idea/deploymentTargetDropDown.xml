@@ -2,7 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ImageActivityTest">
+        <State />
+      </entry>
+      <entry key="ImageActivityTest$SubmitButtonTest">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="testImage()">
+        <State />
+      </entry>
+      <entry key="testSubmitButton()">
         <State />
       </entry>
     </value>
