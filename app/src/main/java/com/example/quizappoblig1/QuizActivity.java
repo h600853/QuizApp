@@ -7,9 +7,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
-    private Content content;
+
    private Button button;
    private Button button2;
    private Button button3;
@@ -17,6 +22,10 @@ public class QuizActivity extends AppCompatActivity {
     private TextView points;
     int pointsCounter = 0;
     int roundCounter = 0;
+    private MainViewModel mainViewModel;
+    private List<ImageAndText> content;
+
+    private LiveData<List<ImageAndText>> allImageAndTexts;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +33,7 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         init();
+        observerSetup();
         getRandomQuestion();
 
 
@@ -35,14 +45,22 @@ public class QuizActivity extends AppCompatActivity {
         button2 = findViewById(R.id.option2);
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
-        content = (Content) getApplication();
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.insertDefaults();
+        allImageAndTexts = mainViewModel.getAllImageAndTexts();
+
+    }
+    private void observerSetup() {
+        mainViewModel.getAllImageAndTexts().observe(this, imageAndTexts -> {
+            content = new ArrayList<>(imageAndTexts);
+        });
     }
 
     public void getRandomQuestion() {
-        if (content.getContent().isEmpty()) return;
+        if (content.isEmpty()) return;
 
-        int random = (int) (Math.random() * content.getContent().size());
-        ImageAndText answer = content.getContent().get(random);
+        int random = (int) (Math.random() * content.size());
+        ImageAndText answer = content.get(random);
         imageView.setImageURI(answer.getImage());
 
         int correctButton = (int) (Math.random() * 3) + 1;
@@ -71,7 +89,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private String getRandomName() {
-        return content.getContent().get((int) (Math.random() * content.getContent().size())).getName();
+        return content.get((int) (Math.random() * content.size())).getName();
     }
 
     private void setButtonClickListeners(ImageAndText answer, Button button) {

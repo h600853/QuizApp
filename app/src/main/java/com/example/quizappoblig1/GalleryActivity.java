@@ -8,35 +8,39 @@ import android.widget.Button;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
    private ActivityResultLauncher<Intent> activityResultLauncher;
-   private Content content;
+   private MainViewModel mainViewModel;
     private boolean sorted = true;
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
     private Button sort;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
-        content = (Content) getApplication();
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.insertDefaults();
 
         setupActivityResultLauncher();
         setupView();
-        setupImageAdapter();
         setupButtons();
+        observerSetup();
     }
-
-    private void setupImageAdapter() {
-        imageAdapter = new ImageAdapter(this, content.getContent());
-        recyclerView.setAdapter(imageAdapter);
+    private void observerSetup() {
+        mainViewModel.getAllImageAndTexts().observe(this, imageAndTexts -> {
+            imageAdapter = new ImageAdapter(this, imageAndTexts);
+            recyclerView.setAdapter(imageAdapter);
+        });
     }
 
     private void setupView() {
@@ -60,10 +64,8 @@ public class GalleryActivity extends AppCompatActivity {
             int flag = Intent.FLAG_GRANT_READ_URI_PERMISSION;
             getContentResolver().takePersistableUriPermission(uri, flag);
             String name = data.getStringExtra("inputText");
-            content.addContent(new ImageAndText(name, uri));
-            RecyclerView recyclerView = findViewById(R.id.recyclerView);
-            ImageAdapter imageAdapter = new ImageAdapter(this, content.getContent());
-            recyclerView.setAdapter(imageAdapter);
+            mainViewModel.insert(new ImageAndText(name, uri));
+
         }
     }
 
@@ -77,7 +79,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void sortlogic() {
-        ArrayList<ImageAndText> imageList = content.getContent();
+        List<ImageAndText> imageList = imageAdapter.getImages();
 
         if (!imageList.isEmpty()) {
             //sort a to z
@@ -98,16 +100,4 @@ public class GalleryActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ArrayList<ImageAndText> existingContent = content.getContent();
-
-        if (!existingContent.isEmpty()) {
-            RecyclerView recyclerView = findViewById(R.id.recyclerView);
-            ImageAdapter imageAdapter = new ImageAdapter(this, existingContent);
-            recyclerView.setAdapter(imageAdapter);
-        }
-
-    }
 }

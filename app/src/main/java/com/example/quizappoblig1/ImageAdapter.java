@@ -1,7 +1,6 @@
 package com.example.quizappoblig1;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<ImageAndText> images;
+    private final List<ImageAndText> images;
 
 
-    public ImageAdapter(Context context, ArrayList<ImageAndText> images) {
+    public ImageAdapter(Context context, List<ImageAndText> images) {
         this.context = context;
         this.images = images;
 
@@ -39,9 +37,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         holder.imageView.setImageURI(imageResource.getImage());
         holder.imageName.setText(imageResource.getName());
         if (holder.imageView != null) {
-            holder.imageView.setOnClickListener(v -> {
-                removeImage(position);
-            });
+            holder.imageView.setOnClickListener(v -> removeImage(position));
         }
     }
 
@@ -54,6 +50,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return images.size();
+    }
+
+    public List<ImageAndText> getImages() {
+        return images;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
