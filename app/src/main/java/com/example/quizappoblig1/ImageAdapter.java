@@ -15,12 +15,11 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<ImageAndText> images;
+    private List<ImageAndText> images;
 
 
-    public ImageAdapter(Context context, List<ImageAndText> images) {
+    public ImageAdapter(Context context) {
         this.context = context;
-        this.images = images;
 
     }
 
@@ -39,6 +38,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         if (holder.imageView != null) {
             holder.imageView.setOnClickListener(v -> removeImage(position));
         }
+    }
+    public void setList(List<ImageAndText> images) {
+        this.images = images;
+        notifyDataSetChanged();
     }
 
     private void removeImage(int position) {
