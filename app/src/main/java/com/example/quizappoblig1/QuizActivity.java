@@ -31,9 +31,10 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+       Content data = (Content) getApplication();
+       content = data.getContent();
 
         init();
-        observerSetup();
         getRandomQuestion();
 
 
@@ -46,14 +47,8 @@ public class QuizActivity extends AppCompatActivity {
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.insertDefaults();
-        allImageAndTexts = mainViewModel.getAllImageAndTexts();
 
-    }
-    private void observerSetup() {
-        mainViewModel.getAllImageAndTexts().observe(this, imageAndTexts -> {
-            content = new ArrayList<>(imageAndTexts);
-        });
+
     }
 
     public void getRandomQuestion() {

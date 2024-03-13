@@ -36,5 +36,11 @@ private static class insertAsyncTask extends android.os.AsyncTask<ImageAndText, 
        insertAsyncTask task = new insertAsyncTask(imageAndTextDAO);
         task.execute(imageAndText);
     }
+    public void delete(ImageAndText imageAndText) {
+        new Thread(() -> imageAndTextDAO.delete(imageAndText)).start();
+    }
+    public void deleteAll() {
+        new Thread(() -> imageAndTextDAO.deleteAll()).start();
+    }
 
 }

@@ -14,9 +14,10 @@ public interface ImageAndTextDAO {
     @Insert
     Void insertImageAndText(ImageAndText imageAndText);
     @Delete
-    void deleteImageAndText(ImageAndText imageAndText);
+    void delete(ImageAndText imageAndText);
     @Query("SELECT * FROM ImageAndText")
     LiveData<List<ImageAndText>> getAllImageAndTexts();
-
+    @Query("DELETE FROM ImageAndText")
+    void deleteAll();
 
 }

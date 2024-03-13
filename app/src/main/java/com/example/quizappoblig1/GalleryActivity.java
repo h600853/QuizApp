@@ -22,6 +22,7 @@ public class GalleryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
     private Button sort;
+    private Content content;
 
 
     @Override
@@ -29,23 +30,32 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.insertDefaults();
+        content = (Content) getApplication();
 
         setupActivityResultLauncher();
         setupView();
+        updateView();
         setupButtons();
         observerSetup();
     }
     private void observerSetup() {
         mainViewModel.getAllImageAndTexts().observe(this, imageAndTexts -> {
-            imageAdapter = new ImageAdapter(this, imageAndTexts);
-            recyclerView.setAdapter(imageAdapter);
+            imageAndTexts.forEach(imageAndText -> {
+                if (!content.getContent().contains(imageAndText)) {
+                    content.getContent().add(imageAndText);
+                    updateView();
+                }
+            });
         });
     }
 
     private void setupView() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+    }
+    private void updateView() {
+        imageAdapter = new ImageAdapter(this, content.getContent());
+        recyclerView.setAdapter(imageAdapter);
     }
 
     private void setupActivityResultLauncher() {
@@ -79,7 +89,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void sortlogic() {
-        List<ImageAndText> imageList = imageAdapter.getImages();
+        List<ImageAndText> imageList = content.getContent();
 
         if (!imageList.isEmpty()) {
             //sort a to z
