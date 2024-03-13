@@ -11,7 +11,7 @@ public class Converters {
         return uri == null ? null : uri.toString();
     }
     @TypeConverter
-    public static Uri toUri(String uri) {
-        return uri == null ? null : Uri.parse(uri);
+    public static Uri toUri(String string) {
+        return string == null ? null : Uri.parse(string);
     }
 }

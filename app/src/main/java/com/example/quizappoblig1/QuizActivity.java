@@ -23,7 +23,7 @@ public class QuizActivity extends AppCompatActivity {
     int pointsCounter = 0;
     int roundCounter = 0;
     private MainViewModel mainViewModel;
-    private List<ImageAndText> content;
+
 
     private LiveData<List<ImageAndText>> allImageAndTexts;
 
@@ -31,11 +31,14 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-       Content data = (Content) getApplication();
-       content = data.getContent();
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        allImageAndTexts = mainViewModel.getAllImageAndTexts();
 
         init();
-        getRandomQuestion();
+        allImageAndTexts.observe(this, imageAndTextList -> {
+        getRandomQuestion(imageAndTextList);
+
+                });
 
 
     }
@@ -51,7 +54,8 @@ public class QuizActivity extends AppCompatActivity {
 
     }
 
-    public void getRandomQuestion() {
+    public void getRandomQuestion(List<ImageAndText> content) {
+
         if (content.isEmpty()) return;
 
         int random = (int) (Math.random() * content.size());
@@ -63,31 +67,32 @@ public class QuizActivity extends AppCompatActivity {
         switch (correctButton) {
             case 1:
                 button.setText(answer.getName());
-                button2.setText(getRandomName());
-                button3.setText(getRandomName());
+                button2.setText(getRandomName(content));
+                button3.setText(getRandomName(content));
                 break;
             case 2:
                 button2.setText(answer.getName());
-                button.setText(getRandomName());
-                button3.setText(getRandomName());
+                button.setText(getRandomName(content));
+                button3.setText(getRandomName(content));
                 break;
             case 3:
                 button3.setText(answer.getName());
-                button.setText(getRandomName());
-                button2.setText(getRandomName());
+                button.setText(getRandomName(content));
+                button2.setText(getRandomName(content));
                 break;
         }
 
-        setButtonClickListeners(answer, button);
-        setButtonClickListeners(answer, button2);
-        setButtonClickListeners(answer, button3);
+        setButtonClickListeners(answer, button, content);
+        setButtonClickListeners(answer, button2, content);
+        setButtonClickListeners(answer, button3, content);
     }
 
-    private String getRandomName() {
+    private String getRandomName(List<ImageAndText> content) {
+
         return content.get((int) (Math.random() * content.size())).getName();
     }
 
-    private void setButtonClickListeners(ImageAndText answer, Button button) {
+    private void setButtonClickListeners(ImageAndText answer, Button button, List<ImageAndText> content) {
         TextView answerText = findViewById(R.id.answer);
         button.setOnClickListener(v -> {
             if (button.getText().equals(answer.getName())) {
@@ -96,13 +101,13 @@ public class QuizActivity extends AppCompatActivity {
             } else {
                 answerText.setText("Correct answer was: " + answer.getName());
             }
-            newRound();
+            newRound(content);
         });
     }
-    private void newRound() {
+    private void newRound(List<ImageAndText> content) {
         roundCounter++;
         points.setText(pointsCounter + "/" + roundCounter);
-        getRandomQuestion();
+        getRandomQuestion(content);
     }
 
 
