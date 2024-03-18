@@ -43,7 +43,7 @@ public class GalleryActivity extends AppCompatActivity {
                 mainViewModel.insert(new ImageAndText("German Shepherd", Uri.parse("android.resource://com.example.quizappoblig1/" + R.drawable.gs)));
                 mainViewModel.insert(new ImageAndText("Shiba Inu", Uri.parse("android.resource://com.example.quizappoblig1/" + R.drawable.shib)));
             }
-        imageAdapter = new ImageAdapter(this);
+        imageAdapter = new ImageAdapter(this, mainViewModel);
         imageAdapter.setList(imageAndTexts);
         recyclerView.setAdapter(imageAdapter);
         });

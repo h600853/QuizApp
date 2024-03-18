@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -16,10 +17,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     private final Context context;
     private List<ImageAndText> images;
+    private final MainViewModel viewModel;
 
 
-    public ImageAdapter(Context context) {
+    public ImageAdapter(Context context, MainViewModel viewModel) {
         this.context = context;
+        this.viewModel = viewModel;
+
 
     }
 
@@ -45,6 +49,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     }
 
     private void removeImage(int position) {
+        viewModel.delete(images.get(position));
         images.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, images.size());
