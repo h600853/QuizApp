@@ -8,6 +8,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +19,7 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<ImageAndText>> databaseData;
     private MutableLiveData<Integer> pointsCounter = new MutableLiveData<>(0);
     private MutableLiveData<Integer> roundCounter = new MutableLiveData<>(0);
-    private MutableLiveData<String> answer = new MutableLiveData<>("");
+    private MutableLiveData<String> answerText = new MutableLiveData<>("");
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ImageAndTextRepository(application);
@@ -51,11 +53,10 @@ public class MainViewModel extends AndroidViewModel {
     public void incrementRoundCounter() {
         roundCounter.setValue(roundCounter.getValue() + 1);
     }
-    public LiveData<String> getAnswer() {
-        return answer;
+    public LiveData<String> getAnswerText() {
+        return answerText;
     }
-    public void setAnswer(String answer) {
-        this.answer.setValue(answer);
+    public void setAnswerText(String answer) {
+        this.answerText.setValue(answer);
     }
-
 }
