@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
@@ -21,8 +20,7 @@ public class QuizActivity extends AppCompatActivity {
    private Button button3;
     private ImageView imageView;
     private TextView points;
-    int pointsCounter = 0;
-    int roundCounter = 0;
+    private TextView round;
     private MainViewModel mainViewModel;
 
 
@@ -31,21 +29,16 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //support landscape mode
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_quiz_land);
         }else{
         setContentView(R.layout.activity_quiz);
         }
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         allImageAndTexts = mainViewModel.getAllImageAndTexts();
-
         init();
-        allImageAndTexts.observe(this, imageAndTextList -> {
-        getRandomQuestion(imageAndTextList);
-
-                });
-
 
     }
 
@@ -55,9 +48,17 @@ public class QuizActivity extends AppCompatActivity {
         button2 = findViewById(R.id.option2);
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
+        round = findViewById(R.id.round);
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        observerSetup();
+    }
+    private void observerSetup() {
+        mainViewModel.getPointsCounter().observe(this, currentPoints -> points.setText(String.valueOf(currentPoints)));
+        mainViewModel.getRoundCounter().observe(this, rounds -> round.setText(String.valueOf(rounds)));
 
+        allImageAndTexts.observe(this, this::getRandomQuestion);
     }
 
     public void getRandomQuestion(List<ImageAndText> content) {
@@ -102,7 +103,7 @@ public class QuizActivity extends AppCompatActivity {
         TextView answerText = findViewById(R.id.answer);
         button.setOnClickListener(v -> {
             if (button.getText().equals(answer.getName())) {
-                pointsCounter++;
+                mainViewModel.incrementPointsCounter();
                 answerText.setText("Correct!");
             } else {
                 answerText.setText("Correct answer was: " + answer.getName());
@@ -111,8 +112,8 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
     private void newRound(List<ImageAndText> content) {
-        roundCounter++;
-        points.setText(pointsCounter + "/" + roundCounter);
+        mainViewModel.incrementRoundCounter();
+      //  points.setText(pointsCounter + "/" + roundCounter);
         getRandomQuestion(content);
     }
 

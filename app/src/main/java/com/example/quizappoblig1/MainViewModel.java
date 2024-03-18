@@ -6,6 +6,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +15,8 @@ import java.util.List;
 public class MainViewModel extends AndroidViewModel {
     private ImageAndTextRepository repository;
     private LiveData<List<ImageAndText>> databaseData;
+    private MutableLiveData<Integer> pointsCounter = new MutableLiveData<>(0);
+    private MutableLiveData<Integer> roundCounter = new MutableLiveData<>(0);
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -32,6 +35,26 @@ public class MainViewModel extends AndroidViewModel {
     }
     public void deleteAll() {
         repository.deleteAll();
+    }
+    public LiveData<Integer> getPointsCounter() {
+        return pointsCounter;
+    }
+
+    public LiveData<Integer> getRoundCounter() {
+        return roundCounter;
+    }
+
+    public void incrementPointsCounter() {
+        pointsCounter.setValue(pointsCounter.getValue() + 1);
+    }
+
+    public void incrementRoundCounter() {
+        roundCounter.setValue(roundCounter.getValue() + 1);
+    }
+
+    public void resetCounters() {
+        pointsCounter.setValue(0);
+        roundCounter.setValue(0);
     }
 
 }
