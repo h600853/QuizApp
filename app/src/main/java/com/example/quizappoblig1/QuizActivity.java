@@ -21,6 +21,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageView imageView;
     private TextView points;
     private TextView round;
+    private TextView answerText;
     private MainViewModel mainViewModel;
 
 
@@ -49,7 +50,7 @@ public class QuizActivity extends AppCompatActivity {
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
         round = findViewById(R.id.round);
-
+        answerText = findViewById(R.id.answer);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         observerSetup();
@@ -57,7 +58,7 @@ public class QuizActivity extends AppCompatActivity {
     private void observerSetup() {
         mainViewModel.getPointsCounter().observe(this, currentPoints -> points.setText(String.valueOf(currentPoints)));
         mainViewModel.getRoundCounter().observe(this, rounds -> round.setText(String.valueOf(rounds)));
-
+        mainViewModel.getAnswer().observe(this, answer -> this.answerText.setText(answer));
         allImageAndTexts.observe(this, this::getRandomQuestion);
     }
 
@@ -104,16 +105,15 @@ public class QuizActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             if (button.getText().equals(answer.getName())) {
                 mainViewModel.incrementPointsCounter();
-                answerText.setText("Correct!");
+                mainViewModel.setAnswer("Correct!");
             } else {
-                answerText.setText("Correct answer was: " + answer.getName());
+                mainViewModel.setAnswer("The correct answer was: " + answer.getName());
             }
             newRound(content);
         });
     }
     private void newRound(List<ImageAndText> content) {
         mainViewModel.incrementRoundCounter();
-      //  points.setText(pointsCounter + "/" + roundCounter);
         getRandomQuestion(content);
     }
 

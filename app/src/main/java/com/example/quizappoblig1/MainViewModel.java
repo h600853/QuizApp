@@ -17,7 +17,7 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<ImageAndText>> databaseData;
     private MutableLiveData<Integer> pointsCounter = new MutableLiveData<>(0);
     private MutableLiveData<Integer> roundCounter = new MutableLiveData<>(0);
-
+    private MutableLiveData<String> answer = new MutableLiveData<>("");
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ImageAndTextRepository(application);
@@ -51,10 +51,11 @@ public class MainViewModel extends AndroidViewModel {
     public void incrementRoundCounter() {
         roundCounter.setValue(roundCounter.getValue() + 1);
     }
-
-    public void resetCounters() {
-        pointsCounter.setValue(0);
-        roundCounter.setValue(0);
+    public LiveData<String> getAnswer() {
+        return answer;
+    }
+    public void setAnswer(String answer) {
+        this.answer.setValue(answer);
     }
 
 }
