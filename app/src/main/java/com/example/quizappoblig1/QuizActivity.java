@@ -1,5 +1,6 @@
 package com.example.quizappoblig1;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,7 +31,12 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //support landscape mode
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_quiz_land);
+        }else{
         setContentView(R.layout.activity_quiz);
+        }
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         allImageAndTexts = mainViewModel.getAllImageAndTexts();
 
