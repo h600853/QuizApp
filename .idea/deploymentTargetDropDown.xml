@@ -11,7 +11,10 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="testImage()">
+      <entry key="testGalleryButton()">
+        <State />
+      </entry>
+      <entry key="testQuizButton()">
         <State />
       </entry>
       <entry key="testSubmitButton()">
