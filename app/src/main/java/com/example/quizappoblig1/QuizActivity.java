@@ -100,7 +100,10 @@ public class QuizActivity extends AppCompatActivity {
                 break;
         }
     }
-
+    private ImageAndText getRandomAnswer(List<ImageAndText> content) {
+        int random = (int) (Math.random() * content.size());
+        return content.get(random);
+    }
     private String getRandomName(List<ImageAndText> content) {
 
         return content.get((int) (Math.random() * content.size())).getName();
@@ -118,12 +121,14 @@ public class QuizActivity extends AppCompatActivity {
             } else {
                 mainViewModel.setAnswerText("The correct answer was: " + answer.getName());
             }
-            newRound(content, answer);
+            newRound(content);
 
     }
-    private void newRound(List<ImageAndText> content, ImageAndText answer) {
+    private void newRound(List<ImageAndText> content) {
         mainViewModel.incrementRoundCounter();
-        setupQuiz(content,answer);
+        ImageAndText newAnswer = getRandomAnswer(content);
+        mainViewModel.setCurrentAnswer(newAnswer);
+        setupQuiz(content, newAnswer);
     }
 
 
