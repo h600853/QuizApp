@@ -22,6 +22,12 @@ public class MainViewModel extends AndroidViewModel {
     private MutableLiveData<String> answerText = new MutableLiveData<>("");
     private MutableLiveData<ImageAndText> currentAnswer = new MutableLiveData<>();
 
+
+    private Integer randomVal;
+
+
+    private Integer randomName;
+
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ImageAndTextRepository(application);
@@ -29,8 +35,25 @@ public class MainViewModel extends AndroidViewModel {
         databaseData.observeForever(imageAndTexts -> {
             if (imageAndTexts != null && !imageAndTexts.isEmpty()) {
                 setCurrentAnswer(getRandomAnswer(imageAndTexts));
+                setRandomName((int) (Math.random() * imageAndTexts.size()));
             }
         });
+        setRandomVal((int) (Math.random() * 3) + 1);
+    }
+    public Integer getRandomName() {
+        return randomName;
+    }
+
+    public void setRandomName(Integer randomName) {
+        this.randomName = randomName;
+    }
+
+    public Integer getRandomVal() {
+        return randomVal;
+    }
+
+    public void setRandomVal(Integer randomVal) {
+        this.randomVal = randomVal;
     }
 
     public void setCurrentAnswer(ImageAndText randomAnswer) {

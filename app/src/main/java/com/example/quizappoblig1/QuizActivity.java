@@ -80,9 +80,7 @@ public class QuizActivity extends AppCompatActivity {
 
 
     private void setButtonsTexts(List<ImageAndText> content, ImageAndText answer) {
-        int correctButton = (int) (Math.random() * 3) + 1;
-
-        switch (correctButton) {
+        switch (mainViewModel.getRandomVal()) {
             case 1:
                 button.setText(answer.getName());
                 button2.setText(getRandomName(content));
@@ -106,7 +104,7 @@ public class QuizActivity extends AppCompatActivity {
     }
     private String getRandomName(List<ImageAndText> content) {
 
-        return content.get((int) (Math.random() * content.size())).getName();
+        return content.get(mainViewModel.getRandomName()).getName();
     }
     private void setButtonClickListeners(ImageAndText answer, List<ImageAndText> content) {
         button.setOnClickListener(v -> checkAnswer (answer, button, content));
@@ -127,6 +125,8 @@ public class QuizActivity extends AppCompatActivity {
     private void newRound(List<ImageAndText> content) {
         mainViewModel.incrementRoundCounter();
         ImageAndText newAnswer = getRandomAnswer(content);
+        mainViewModel.setRandomVal((int) (Math.random() * 3) + 1);
+        mainViewModel.setRandomName((int) (Math.random() * content.size()));
         mainViewModel.setCurrentAnswer(newAnswer);
         setupQuiz(content, newAnswer);
     }
