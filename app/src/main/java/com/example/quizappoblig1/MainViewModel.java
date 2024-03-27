@@ -20,11 +20,29 @@ public class MainViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> pointsCounter = new MutableLiveData<>(0);
     private MutableLiveData<Integer> roundCounter = new MutableLiveData<>(0);
     private MutableLiveData<String> answerText = new MutableLiveData<>("");
+    private MutableLiveData<ImageAndText> currentAnswer = new MutableLiveData<>();
+
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ImageAndTextRepository(application);
          databaseData = repository.getAllImageAndTexts();
+        databaseData.observeForever(imageAndTexts -> {
+            if (imageAndTexts != null && !imageAndTexts.isEmpty()) {
+                setCurrentAnswer(getRandomAnswer(imageAndTexts));
+            }
+        });
+    }
 
+    public void setCurrentAnswer(ImageAndText randomAnswer) {
+        this.currentAnswer.setValue(randomAnswer);
+    }
+    public LiveData<ImageAndText> getCurrentAnswer() {
+        return currentAnswer;
+    }
+
+    private ImageAndText getRandomAnswer(List<ImageAndText> content) {
+        int random = (int) (Math.random() * content.size());
+        return content.get(random);
     }
     LiveData<List<ImageAndText>> getAllImageAndTexts() {
         return databaseData;
