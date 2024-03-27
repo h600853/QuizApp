@@ -1,7 +1,6 @@
 package com.example.quizappoblig1;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,20 +8,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<ImageAndText> images;
+    private List<ImageAndText> images;
+    private final MainViewModel viewModel;
 
 
-    public ImageAdapter(Context context, ArrayList<ImageAndText> images) {
+    public ImageAdapter(Context context, MainViewModel viewModel) {
         this.context = context;
-        this.images = images;
+        this.viewModel = viewModel;
+
 
     }
 
@@ -39,13 +40,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         holder.imageView.setImageURI(imageResource.getImage());
         holder.imageName.setText(imageResource.getName());
         if (holder.imageView != null) {
-            holder.imageView.setOnClickListener(v -> {
-                removeImage(position);
-            });
+            holder.imageView.setOnClickListener(v -> removeImage(position));
         }
+    }
+    public void setList(List<ImageAndText> images) {
+        this.images = images;
+        notifyDataSetChanged();
     }
 
     private void removeImage(int position) {
+        viewModel.delete(images.get(position));
         images.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, images.size());
@@ -54,6 +58,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return images.size();
+    }
+
+    public List<ImageAndText> getImages() {
+        return images;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

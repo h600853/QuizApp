@@ -1,5 +1,6 @@
 package com.example.quizappoblig1;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -7,25 +8,41 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
+import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
-    private Content content;
+
    private Button button;
    private Button button2;
    private Button button3;
     private ImageView imageView;
     private TextView points;
-    int pointsCounter = 0;
-    int roundCounter = 0;
+    private TextView round;
+    private TextView answer;
+    private MainViewModel mainViewModel;
+
+
+
+    private LiveData<List<ImageAndText>> allImageAndTexts;
+    private LiveData<ImageAndText> currentAnswer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_quiz_land);
+        }else{
         setContentView(R.layout.activity_quiz);
+        }
 
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        allImageAndTexts = mainViewModel.getAllImageAndTexts();
+        currentAnswer = mainViewModel.getCurrentAnswer();
         init();
-        getRandomQuestion();
-
 
     }
 
@@ -35,61 +52,83 @@ public class QuizActivity extends AppCompatActivity {
         button2 = findViewById(R.id.option2);
         button3 = findViewById(R.id.option3);
         points = findViewById(R.id.points);
-        content = (Content) getApplication();
+        round = findViewById(R.id.round);
+        answer = findViewById(R.id.answer);
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        observerSetup();
+    }
+    private void observerSetup() {
+        mainViewModel.getPointsCounter().observe(this, currentPoints -> points.setText(String.valueOf(currentPoints)));
+        mainViewModel.getRoundCounter().observe(this, rounds -> round.setText(String.valueOf(rounds)));
+        mainViewModel.getAnswerText().observe(this, currentAnswer -> answer.setText(currentAnswer));
+        allImageAndTexts.observe(this, content -> setupQuiz(content, currentAnswer.getValue()));
     }
 
-    public void getRandomQuestion() {
-        if (content.getContent().isEmpty()) return;
+    public void setupQuiz(List<ImageAndText> content, ImageAndText currentAnswer) {
 
-        int random = (int) (Math.random() * content.getContent().size());
-        ImageAndText answer = content.getContent().get(random);
-        imageView.setImageURI(answer.getImage());
+        if (content.isEmpty()) return;
 
-        int correctButton = (int) (Math.random() * 3) + 1;
 
-        switch (correctButton) {
+        imageView.setImageURI(currentAnswer.getImage());
+
+        setButtonsTexts(content, currentAnswer);
+        setButtonClickListeners(currentAnswer, content);
+    }
+
+
+
+    private void setButtonsTexts(List<ImageAndText> content, ImageAndText answer) {
+        switch (mainViewModel.getRandomVal()) {
             case 1:
                 button.setText(answer.getName());
-                button2.setText(getRandomName());
-                button3.setText(getRandomName());
+                button2.setText(getRandomName(content));
+                button3.setText(getRandomName(content));
                 break;
             case 2:
                 button2.setText(answer.getName());
-                button.setText(getRandomName());
-                button3.setText(getRandomName());
+                button.setText(getRandomName(content));
+                button3.setText(getRandomName(content));
                 break;
             case 3:
                 button3.setText(answer.getName());
-                button.setText(getRandomName());
-                button2.setText(getRandomName());
+                button.setText(getRandomName(content));
+                button2.setText(getRandomName(content));
                 break;
         }
-
-        setButtonClickListeners(answer, button);
-        setButtonClickListeners(answer, button2);
-        setButtonClickListeners(answer, button3);
     }
-
-    private String getRandomName() {
-        return content.getContent().get((int) (Math.random() * content.getContent().size())).getName();
+    private ImageAndText getRandomAnswer(List<ImageAndText> content) {
+        int random = (int) (Math.random() * content.size());
+        return content.get(random);
     }
+    private String getRandomName(List<ImageAndText> content) {
 
-    private void setButtonClickListeners(ImageAndText answer, Button button) {
-        TextView answerText = findViewById(R.id.answer);
-        button.setOnClickListener(v -> {
+        return content.get(mainViewModel.getRandomName()).getName();
+    }
+    private void setButtonClickListeners(ImageAndText answer, List<ImageAndText> content) {
+        button.setOnClickListener(v -> checkAnswer (answer, button, content));
+        button2.setOnClickListener(v -> checkAnswer(answer, button2, content));
+        button3.setOnClickListener(v -> checkAnswer(answer, button3, content));
+    }
+    private void checkAnswer(ImageAndText answer, Button button, List<ImageAndText> content) {
+
             if (button.getText().equals(answer.getName())) {
-                pointsCounter++;
-                answerText.setText("Correct!");
+                mainViewModel.incrementPointsCounter();
+                mainViewModel.setAnswerText("Correct!");
             } else {
-                answerText.setText("Correct answer was: " + answer.getName());
+                mainViewModel.setAnswerText("The correct answer was: " + answer.getName());
             }
-            newRound();
-        });
+            newRound(content);
+
     }
-    private void newRound() {
-        roundCounter++;
-        points.setText(pointsCounter + "/" + roundCounter);
-        getRandomQuestion();
+    private void newRound(List<ImageAndText> content) {
+        mainViewModel.incrementRoundCounter();
+        ImageAndText newAnswer = getRandomAnswer(content);
+        mainViewModel.setRandomVal((int) (Math.random() * 3) + 1);
+        mainViewModel.setRandomName((int) (Math.random() * content.size()));
+        mainViewModel.setCurrentAnswer(newAnswer);
+        setupQuiz(content, newAnswer);
     }
 
 

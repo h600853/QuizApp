@@ -1,8 +1,10 @@
 package com.example.quizappoblig1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -22,5 +24,6 @@ public class MainActivity extends AppCompatActivity {
         quizButton.setOnClickListener(v -> {
             startActivity(new Intent(this, QuizActivity.class));
         });
+
     }
 }
