@@ -45,4 +45,6 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.5.1")
+
 }
