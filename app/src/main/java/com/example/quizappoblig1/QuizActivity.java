@@ -1,6 +1,7 @@
 package com.example.quizappoblig1;
 
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -64,7 +65,15 @@ public class QuizActivity extends AppCompatActivity {
         mainViewModel.getRoundCounter().observe(this, rounds -> round.setText(String.valueOf(rounds)));
         mainViewModel.getAnswerText().observe(this, currentAnswer -> answer.setText(currentAnswer));
         allImageAndTexts.observe(this, content -> setupQuiz(content, currentAnswer.getValue()));
+        mainViewModel.getAllImageAndTexts().observe(this, imageAndTexts -> {
+            if (imageAndTexts.isEmpty()) {
+                mainViewModel.insert(new ImageAndText("Golden Retriever", Uri.parse("android.resource://com.example.quizappoblig1/" + R.drawable.gr)));
+                mainViewModel.insert(new ImageAndText("German Shepherd", Uri.parse("android.resource://com.example.quizappoblig1/" + R.drawable.gs)));
+                mainViewModel.insert(new ImageAndText("Shiba Inu", Uri.parse("android.resource://com.example.quizappoblig1/" + R.drawable.shib)));
+            }
+        });
     }
+
 
     public void setupQuiz(List<ImageAndText> content, ImageAndText currentAnswer) {
 
